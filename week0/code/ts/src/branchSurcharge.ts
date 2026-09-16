@@ -14,7 +14,7 @@ export async function getBranchSurchargeMultiplier(branchId: string): Promise<nu
   return 1 + rate;
 }
 
-export function applyBranchSurcharge(subtotal: number, branchId: string): number {
-  const multiplier = getBranchSurchargeMultiplier(branchId);
+export async function applyBranchSurcharge(subtotal: number, branchId: string): Promise<number> {
+  const multiplier = await getBranchSurchargeMultiplier(branchId);
   return subtotal * multiplier;
 }

@@ -8,7 +8,7 @@ Policy (from Meridian's pricing team, 2026 revision, section 4.2):
     tooling expects.
 """
 
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 
 from quoting.models import QuoteLine
 
@@ -23,14 +23,14 @@ def total_units(lines: list[QuoteLine]) -> int:
 
 def apply_volume_discount(subtotal: Decimal, total_qty: int) -> Decimal:
     """Apply Meridian's volume discount to a subtotal, if the quote qualifies."""
-    if total_qty > VOLUME_DISCOUNT_THRESHOLD:
+    if total_qty >= VOLUME_DISCOUNT_THRESHOLD:
         return subtotal * (Decimal("1") - VOLUME_DISCOUNT_RATE)
     return subtotal
 
 
 def round_currency(amount: Decimal) -> Decimal:
     """Round a monetary amount to the nearest cent."""
-    return Decimal(str(round(float(amount), 2)))
+    return amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
 
 def quote_total(lines: list[QuoteLine]) -> Decimal:
